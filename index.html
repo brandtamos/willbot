@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+	<style>
+	md-list-item
+	{
+		opacity: 1;
+	}
+	md-list-item.ng-enter {
+		-webkit-transition: 1s;
+		transition: 1s;
+		opacity: 0;
+	}
+	md-list-item.ng-enter-active {
+		opacity: 1;
+	}
+	[scroll-glue]{
+        height: 400px;
+        overflow-y: scroll;
+        border: 1px solid gray;
+      }
+	</style>
+</head>
+<body ng-app="YourApp">
+ 
+<div ng-controller="YourController">
+	<div layout="row">
+		<div flex-sm="0" flex-gt-sm="20"></div>
+		<div flex-gt-sm="60" flex-sm="100" flex-xs="100">
+			<md-toolbar layout="row" class="md-hue-3">
+			  <div class="md-toolbar-tools">
+				<span>WillBot v2.0</span>
+			  </div>
+			</md-toolbar>
+			<md-content>
+				<md-list flex>
+				<md-subheader class="md-no-sticky">Will it pass the turing test? No.</md-subheader>
+					<div class="chat-container" scroll-glue>
+						<md-list-item class="md-3-line" ng-repeat="item in messages" ng-click="null">
+						  <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+						  <div class="md-list-item-text" layout="column">
+							<h3>{{ item.who }}</h3>
+							<h4>{{ item.message }}</h4>
+						  </div>
+						</md-list-item>
+					</div>
+				</md-list>
+			</md-content>
+			<div layout="row">
+				<md-input-container class="md-block" flex="80">
+					<label>Type here</label>
+					<input ng-model="input" my-enter="addentry()">
+				</md-input-container>
+				<md-button ng-click="addentry()" class="md-raised md-primary" flex="20">Send</md-button>
+			</div>
+		</div>
+		<div flex-sm="0" flex-gt-sm="20"></div>
+	</div>
+ </div>
+	<script src="bower_components/angular/angular.js"></script> 
+	<script src="bower_components/angular-aria/angular-aria.js"></script> 
+	<script src="bower_components/angular-animate/angular-animate.js"></script> 
+	<script src="bower_components/angular-material/angular-material.js"></script> 
+	<script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script> 
+	<script>
+ 
+		// Include app dependency on ngMaterial 
+ 
+		var app = angular.module( 'YourApp', [ 'ngMaterial', 'ngAnimate', 'luegg.directives' ] )
+			.controller("YourController", [ '$scope', '$http', function($scope, $http){
+				$scope.input = '';
+				var imagePath = 'img/willbot_avatar.png';
+				var youImagePath = 'img/you_avatar.png';
+				$scope.messages = [
+				  {
+					face : imagePath,
+					message: 'Greetings!',
+					who: 'WillBot'
+				  }
+				];
+				$scope.addentry = function(){
+					$scope.messages.push(
+						{
+							face : youImagePath,
+							message: $scope.input,
+							who: 'You'
+						}
+					);
+					var val = $scope.input;
+					$scope.input = '';
+					$http({
+						method: 'POST',
+						url: 'willbot.php',
+						data: 'i=' + val,
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+					})
+					.then(function (result) {
+						$scope.messages.push(
+							{
+								face : imagePath,
+								message: result.data.response,
+								who: 'WillBot'
+							}
+						);
+					});
+					//$http.post('willbot.php', 'i: ' + val)
+					
+				}
+			
+			}]);
+			app.directive('myEnter', function () {
+				return function (scope, element, attrs) {
+					element.bind("keydown keypress", function (event) {
+						if(event.which === 13) {
+							scope.$apply(function (){
+								scope.$eval(attrs.myEnter);
+							});
+
+							event.preventDefault();
+						}
+					});
+				};
+			});
+	</script> 
+ 
+</body>
+</html>
