@@ -93,7 +93,7 @@ foreach($keyarray as $key){
 			//if it's longer than the best phrase so far
 			$newphrase = join(" ", $phrase);
 			
-			if(strlen($newphrase) > $bestphrase){
+			if(strlen($newphrase) > strlen($bestphrase)){
 				$bestphrase = $newphrase;
 			}
 			break;
@@ -101,7 +101,7 @@ foreach($keyarray as $key){
 	}
 	//this assumes we found enough words up the to the word limit
 	$newphrase = join(" ", $phrase);
-	if(strlen($newphrase) > $bestphrase){
+	if(strlen($newphrase) > strlen($bestphrase)){
 		$bestphrase = $newphrase;
 	}
 }

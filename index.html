@@ -21,6 +21,9 @@
         overflow-y: scroll;
         border: 1px solid gray;
       }
+	.chat-message{
+		white-space: normal !important;
+	}
 	</style>
 </head>
 <body ng-app="YourApp">
@@ -31,7 +34,7 @@
 		<div flex-gt-sm="60" flex-sm="100" flex-xs="100">
 			<md-toolbar layout="row" class="md-hue-3">
 			  <div class="md-toolbar-tools">
-				<span>WillBot v2.0</span>
+				<span>WillBot v2.1</span>
 			  </div>
 			</md-toolbar>
 			<md-content>
@@ -42,7 +45,7 @@
 						  <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
 						  <div class="md-list-item-text" layout="column">
 							<h3>{{ item.who }}</h3>
-							<h4>{{ item.message }}</h4>
+							<h4 class="chat-message">{{ item.message }}</h4>
 						  </div>
 						</md-list-item>
 					</div>
